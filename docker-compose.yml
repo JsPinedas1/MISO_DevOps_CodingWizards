@@ -1,0 +1,38 @@
+version: '3.9'
+networks:
+  app_net:
+    driver: bridge
+  controllers_net:
+    driver: bridge
+
+services:
+  postgres-db:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data/postgres_db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    networks:
+      - controllers_net
+  controllers:
+    build:
+      context: ./controllers
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    environment:
+      DB_NAME: postgres
+      DB_HOST: postgres-db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      TOKEN: EQcfdZ[AUAY=qv/xtF.dVh-TL_0z
+    depends_on: 
+      - postgres-db
+    networks:
+      - app_net
+      - controllers_net
