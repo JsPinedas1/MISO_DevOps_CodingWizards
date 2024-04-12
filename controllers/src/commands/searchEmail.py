@@ -1,6 +1,6 @@
 from .. import configDataBase
 from .baseCommand import BaseCommand
-from ..errors.errors import EmailNotExist, TokenEmpty, TokenNoValid
+from ..errors.errors import EmailNotExist, RequestFieldEmpty, TokenEmpty, TokenNoValid
 from ..models.base import Base
 
 import os
@@ -21,6 +21,7 @@ class SearchEmail(BaseCommand):
 
   def execute(self):
     self.validateToken(self.token)
+    self.isEmptyNone(self.email)
       
     db = configDataBase.db_manager.session()
 
@@ -32,6 +33,10 @@ class SearchEmail(BaseCommand):
       "existe": True,
       "motivo": dataEmail.blockedReason,
     }
+  
+  def isEmptyNone(self, field):
+    if field is None or not field:
+      raise RequestFieldEmpty
 
   def validateToken(self, token):    
     if token is None or not token:
