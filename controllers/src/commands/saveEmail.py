@@ -1,6 +1,6 @@
 from .. import configDataBase
 from .baseCommand import BaseCommand
-from ..errors.errors import EmailAlreadyExist, InvalidUuidFormat, RequestFieldEmpty, TokenEmpty, TokenNoValid
+from ..errors.errors import EmailAlreadyExist, InvalidUuidFormat, RequestFieldEmpty, RequestFieldNotString, TokenEmpty, TokenNoValid
 from ..models.base import Base
 
 import os
@@ -55,6 +55,8 @@ class CreateEmail(BaseCommand):
   def isEmptyNone(self, field):
     if field is None or not field:
       raise RequestFieldEmpty
+    if type(field) == str:
+      raise RequestFieldNotString
 
   def validateToken(self, token):    
     if token is None or not token:

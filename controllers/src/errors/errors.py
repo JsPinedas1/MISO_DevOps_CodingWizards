@@ -10,6 +10,10 @@ class RequestFieldEmpty(ApiError):
   code = 400
   description = "Se deben ingresar todos los par\u00e1metros"
 
+class RequestFieldNotString(ApiError):
+  code = 400
+  description = "Los par\u00e1metros deben ser de tipo string"
+
 class InvalidUuidFormat(ApiError):
   code = 400
   description = "El app_uuid no tiene el formato correspondiente"
