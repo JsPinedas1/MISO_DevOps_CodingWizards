@@ -6,6 +6,7 @@ from ..models.base import Base
 import os
 import pytz
 import re
+import sys
 
 utc=pytz.UTC
 configDataBase.init()
@@ -29,6 +30,10 @@ class CreateEmail(BaseCommand):
     self.isEmptyNone(self.email)
     self.isEmptyNone(self.appUuid)
     self.isEmptyNone(self.blockedReason)
+    
+    print("email", self.email, file=sys.stderr)
+    print("appUuid", self.appUuid, file=sys.stderr)
+    print("blockedReason", self.blockedReason, file=sys.stderr)
     
     if not self.isUuidString(self.appUuid):
       raise InvalidUuidFormat
@@ -55,7 +60,7 @@ class CreateEmail(BaseCommand):
   def isEmptyNone(self, field):
     if field is None or not field:
       raise RequestFieldEmpty
-    if type(field) == str:
+    if type(field) != str:
       raise RequestFieldNotString
 
   def validateToken(self, token):    

@@ -1,7 +1,8 @@
 from flask import jsonify, request, Blueprint
 from ..commands.saveEmail import CreateEmail
 from ..commands.searchEmail import SearchEmail
-from ..errors.errors import FatalError
+from ..errors.errors import FatalError, RequestFieldEmpty
+import sys
 
 controllersBlueprint = Blueprint("blacklists", __name__)
 
@@ -26,11 +27,14 @@ def postEmailBlackList():
     ).execute()
     return jsonify({ "msg": base["msg"] }), 201
   except FatalError as error:
+    print("error", error, file=sys.stderr)
     return jsonify({"error": str(error.description)}), error.code
 
 @controllersBlueprint.route("/blacklists/<email>", methods=["GET"])
 def getEmailBlackList(email):
   try:
+    if not email:
+      raise RequestFieldEmpty
     authorizationToken = request.headers.get("Authorization")
     token = None
     if authorizationToken is not None:
@@ -39,4 +43,5 @@ def getEmailBlackList(email):
     if baseInfo:
       return jsonify(baseInfo), 200
   except FatalError as error:
+    print("error", error, file=sys.stderr)
     return jsonify({"error": str(error.description)}), error.code

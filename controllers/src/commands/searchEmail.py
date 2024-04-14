@@ -4,6 +4,7 @@ from ..errors.errors import EmailNotExist, RequestFieldEmpty, TokenEmpty, TokenN
 from ..models.base import Base
 
 import os
+import sys
 
 configDataBase.init()
 
@@ -22,6 +23,8 @@ class SearchEmail(BaseCommand):
   def execute(self):
     self.validateToken(self.token)
     self.isEmptyNone(self.email)
+    
+    print("email", self.email, file=sys.stderr)
       
     db = configDataBase.db_manager.session()
 
